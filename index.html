@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kalkulator Keuangan 50:20:20:10 &amp; Kustom</title>
+  <meta name="description" content="Kalkulator keuangan statis dengan chart bulat interaktif: metode 50:20:20:10 atau persentase kustom bebas.">
+  <link rel="icon" type="image/png" href="icon/iicon.png">
+  <link rel="apple-touch-icon" href="icon/iicon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <!-- Header Aplikasi -->
+    <header class="app-header">
+      <div class="header-content">
+        <div class="header-brand">
+          <img src="icon/iicon.png" alt="Logo Kalkulator Keuangan" class="app-logo" width="48" height="48" fetchpriority="high">
+          <div class="header-titles">
+            <span class="app-tag">Perencanaan Finansial</span>
+            <h1 class="app-title">Kalkulator Keuangan</h1>
+            <p class="app-subtitle">Alokasikan penghasilan bulanan secara terukur: kebutuhan pokok, jajan, investasi, dan dana darurat.</p>
+          </div>
+        </div>
+        <button id="theme-toggle" class="btn-theme" type="button" aria-label="Beralih ke tema gelap" title="Beralih tema">
+          <svg class="icon-sun" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path d="M12 2v2"></path>
+            <path d="M12 20v2"></path>
+            <path d="m4.93 4.93 1.41 1.41"></path>
+            <path d="m17.66 17.66 1.41 1.41"></path>
+            <path d="M2 12h2"></path>
+            <path d="M20 12h2"></path>
+            <path d="m6.34 17.66-1.41 1.41"></path>
+            <path d="m19.07 4.93-1.41 1.41"></path>
+          </svg>
+          <svg class="icon-moon" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+          </svg>
+          <span class="theme-label" id="theme-text">Tema</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="app-main">
+      <!-- SECTION 1: Input Penghasilan Bersih -->
+      <section class="card input-card" aria-labelledby="heading-sec-1">
+        <div class="card-header">
+          <h2 id="heading-sec-1" class="card-heading">1. Penghasilan Bersih</h2>
+          <p class="card-desc">Masukkan total pendapatan bulanan bersih setelah dikurangi potongan.</p>
+        </div>
+
+        <form id="calculator-form" onsubmit="return false;" novalidate>
+          <div class="form-group">
+            <label for="income-input" class="form-label">Total Penghasilan (Rupiah)</label>
+            <div class="input-wrapper">
+              <span class="currency-prefix" aria-hidden="true">Rp</span>
+              <input
+                type="text"
+                id="income-input"
+                name="income"
+                class="form-control"
+                placeholder="Contoh: 5.000.000"
+                inputmode="numeric"
+                autocomplete="off"
+                aria-describedby="input-feedback"
+              />
+              <button type="button" id="btn-clear" class="btn-clear hidden" aria-label="Hapus nilai input" title="Hapus">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <div id="input-feedback" class="feedback-text hidden" role="alert"></div>
+          </div>
+        </form>
+      </section>
+
+      <!-- SECTION 2: Pola & Persentase Alokasi -->
+      <section class="card ratio-card" aria-labelledby="heading-sec-2">
+        <div class="card-header">
+          <h2 id="heading-sec-2" class="card-heading">2. Pola &amp; Persentase Alokasi</h2>
+          <p class="card-desc">Pilih pola anggaran populer atau ketik angka persentase secara manual untuk tiap pos.</p>
+        </div>
+
+        <!-- Baris Pilihan Pola & Status Total -->
+        <div class="preset-and-status-row">
+          <div class="preset-select-group">
+            <label for="select-rule-preset" class="control-label">Pola Populer:</label>
+            <div class="select-wrapper">
+              <select id="select-rule-preset" class="form-select" aria-label="Pilih pola persentase alokasi">
+                <option value="50,20,20,10" selected>50 : 20 : 20 : 10 (Standar)</option>
+                <option value="50,30,20,0">50 : 30 : 20 : 0 (Klasik Elizabeth Warren)</option>
+                <option value="40,20,20,20">40 : 20 : 20 : 20 (Proteksi &amp; Investasi Kuat)</option>
+                <option value="60,20,10,10">60 : 20 : 10 : 10 (Kebutuhan Hidup Tinggi)</option>
+                <option value="70,15,10,5">70 : 15 : 10 : 5 (Frugal Living)</option>
+                <option value="custom">Kustom (Ketik Manual)</option>
+              </select>
+              <span class="select-arrow" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+              </span>
+            </div>
+          </div>
+
+          <div class="total-status-group">
+            <span id="total-pct-badge" class="total-pct-badge pct-ok" aria-live="polite">Total: 100%</span>
+            <button type="button" id="btn-auto-balance" class="btn-balance hidden" title="Sesuaikan nilai secara proporsional agar total pas 100%">
+              Seimbangkan ke 100%
+            </button>
+          </div>
+        </div>
+
+        <!-- Grid 4 Input Persentase -->
+        <div class="pct-group-container">
+          <div class="pct-group-header">
+            <span class="pct-group-title">Rincian Persentase Tiap Pos:</span>
+            <span class="pct-group-hint">Ketik angka 0 s.d. 100%</span>
+          </div>
+
+          <div class="pct-input-grid">
+            <!-- Kebutuhan -->
+            <div class="pct-input-item item-needs">
+              <label for="num-needs" class="pct-item-label">
+                <span class="legend-dot dot-needs" aria-hidden="true"></span>
+                <span class="pct-item-name">Kebutuhan</span>
+              </label>
+              <div class="input-pct-wrapper">
+                <input type="number" id="num-needs" class="num-pct-input" min="0" max="100" value="50" aria-label="Persentase Kebutuhan Pokok">
+                <span class="pct-unit" aria-hidden="true">%</span>
+              </div>
+            </div>
+
+            <!-- Keinginan -->
+            <div class="pct-input-item item-wants">
+              <label for="num-wants" class="pct-item-label">
+                <span class="legend-dot dot-wants" aria-hidden="true"></span>
+                <span class="pct-item-name">Keinginan / Jajan</span>
+              </label>
+              <div class="input-pct-wrapper">
+                <input type="number" id="num-wants" class="num-pct-input" min="0" max="100" value="20" aria-label="Persentase Keinginan atau Jajan">
+                <span class="pct-unit" aria-hidden="true">%</span>
+              </div>
+            </div>
+
+            <!-- Tabungan -->
+            <div class="pct-input-item item-savings">
+              <label for="num-savings" class="pct-item-label">
+                <span class="legend-dot dot-savings" aria-hidden="true"></span>
+                <span class="pct-item-name">Tabungan &amp; Investasi</span>
+              </label>
+              <div class="input-pct-wrapper">
+                <input type="number" id="num-savings" class="num-pct-input" min="0" max="100" value="20" aria-label="Persentase Tabungan dan Investasi">
+                <span class="pct-unit" aria-hidden="true">%</span>
+              </div>
+            </div>
+
+            <!-- Dana Darurat -->
+            <div class="pct-input-item item-emergency">
+              <label for="num-emergency" class="pct-item-label">
+                <span class="legend-dot dot-emergency" aria-hidden="true"></span>
+                <span class="pct-item-name">Dana Darurat</span>
+              </label>
+              <div class="input-pct-wrapper">
+                <input type="number" id="num-emergency" class="num-pct-input" min="0" max="100" value="10" aria-label="Persentase Dana Darurat">
+                <span class="pct-unit" aria-hidden="true">%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="ratio-feedback" class="ratio-feedback-note" aria-live="polite"></div>
+      </section>
+
+      <!-- Empty State (Tampil sebelum ada input) -->
+      <section id="empty-state" class="card empty-card" aria-live="polite">
+        <div class="empty-icon-wrap" aria-hidden="true">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="18" height="18" x="3" y="3" rx="2"></rect>
+            <path d="M3 9h18"></path>
+            <path d="M9 21V9"></path>
+          </svg>
+        </div>
+        <h3 class="empty-title">Belum Ada Nominal Dihitung</h3>
+        <p class="empty-desc">Ketik jumlah penghasilan Anda pada Section 1 untuk melihat chart bulat dan pembagian nominal secara langsung.</p>
+      </section>
+
+      <!-- SECTION 3: Hasil & Distribusi Anggaran (Tampil setelah ada input) -->
+      <section id="results-view" class="card results-card hidden" aria-labelledby="heading-sec-3" aria-live="polite">
+        <div class="card-header results-header">
+          <div>
+            <h2 id="heading-sec-3" class="card-heading">3. Hasil &amp; Distribusi Anggaran</h2>
+            <p class="card-desc">Visualisasi proporsi dan rincian alokasi keuangan dari pendapatan Anda.</p>
+          </div>
+          <span id="total-summary" class="total-badge">Total: Rp 0</span>
+        </div>
+
+        <!-- Chart Bulat & Rincian Terpadu -->
+        <div class="chart-breakdown-row">
+          <!-- Donut SVG -->
+          <div class="donut-chart-container">
+            <svg id="donut-svg" class="donut-svg" viewBox="0 0 220 220" role="img" aria-label="Chart bulat pembagian anggaran keuangan">
+              <circle class="donut-track" cx="110" cy="110" r="80"></circle>
+              <circle id="seg-needs" class="donut-segment seg-needs" cx="110" cy="110" r="80"></circle>
+              <circle id="seg-wants" class="donut-segment seg-wants" cx="110" cy="110" r="80"></circle>
+              <circle id="seg-savings" class="donut-segment seg-savings" cx="110" cy="110" r="80"></circle>
+              <circle id="seg-emergency" class="donut-segment seg-emergency" cx="110" cy="110" r="80"></circle>
+            </svg>
+            <div class="donut-center" id="donut-center" aria-hidden="true">
+              <span class="donut-center-label" id="donut-center-label">Total Alokasi</span>
+              <span class="donut-center-amount" id="donut-center-amount">Rp 0</span>
+              <span class="donut-center-pct" id="donut-center-pct">100%</span>
+            </div>
+          </div>
+
+          <!-- Rincian 4 Pos Alokasi -->
+          <div class="breakdown-list" role="list" aria-label="Daftar pos alokasi anggaran">
+            <!-- Kebutuhan Pokok -->
+            <div class="breakdown-item item-needs" role="listitem" data-category="needs" tabindex="0">
+              <div class="item-left">
+                <span class="legend-dot dot-needs" aria-hidden="true"></span>
+                <div class="item-meta">
+                  <div class="item-title-row">
+                    <span class="item-title">Kebutuhan Pokok</span>
+                    <span class="pct-badge pct-needs" id="card-pct-needs">50%</span>
+                  </div>
+                  <span class="item-subtitle" id="daily-needs">Sekitar Rp 0 / hari (30 hari)</span>
+                </div>
+              </div>
+              <div class="item-right">
+                <div class="amount-value" id="val-needs">Rp 0</div>
+                <span class="item-tag">Pos Wajib</span>
+              </div>
+            </div>
+
+            <!-- Keinginan / Jajan -->
+            <div class="breakdown-item item-wants" role="listitem" data-category="wants" tabindex="0">
+              <div class="item-left">
+                <span class="legend-dot dot-wants" aria-hidden="true"></span>
+                <div class="item-meta">
+                  <div class="item-title-row">
+                    <span class="item-title">Keinginan / Jajan</span>
+                    <span class="pct-badge pct-wants" id="card-pct-wants">20%</span>
+                  </div>
+                  <span class="item-subtitle" id="daily-wants">Sekitar Rp 0 / hari (30 hari)</span>
+                </div>
+              </div>
+              <div class="item-right">
+                <div class="amount-value" id="val-wants">Rp 0</div>
+                <span class="item-tag">Pos Fleksibel</span>
+              </div>
+            </div>
+
+            <!-- Tabungan & Investasi -->
+            <div class="breakdown-item item-savings" role="listitem" data-category="savings" tabindex="0">
+              <div class="item-left">
+                <span class="legend-dot dot-savings" aria-hidden="true"></span>
+                <div class="item-meta">
+                  <div class="item-title-row">
+                    <span class="item-title">Tabungan &amp; Investasi</span>
+                    <span class="pct-badge pct-savings" id="card-pct-savings">20%</span>
+                  </div>
+                  <span class="item-subtitle" id="yearly-savings">Akumulasi: Rp 0 / tahun</span>
+                </div>
+              </div>
+              <div class="item-right">
+                <div class="amount-value" id="val-savings">Rp 0</div>
+                <span class="item-tag">Masa Depan</span>
+              </div>
+            </div>
+
+            <!-- Dana Darurat -->
+            <div class="breakdown-item item-emergency" role="listitem" data-category="emergency" tabindex="0">
+              <div class="item-left">
+                <span class="legend-dot dot-emergency" aria-hidden="true"></span>
+                <div class="item-meta">
+                  <div class="item-title-row">
+                    <span class="item-title">Dana Darurat</span>
+                    <span class="pct-badge pct-emergency" id="card-pct-emergency">10%</span>
+                  </div>
+                  <span class="item-subtitle" id="target-emergency">Target ideal: 3 sampai 6x kebutuhan</span>
+                </div>
+              </div>
+              <div class="item-right">
+                <div class="amount-value" id="val-emergency">Rp 0</div>
+                <span class="item-tag">Proteksi Likuid</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bilah Tombol Aksi -->
+        <div class="actions-bar">
+          <div class="actions-buttons">
+            <button type="button" id="btn-copy" class="btn btn-primary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+              </svg>
+              <span>Salin Ringkasan</span>
+            </button>
+            <button type="button" id="btn-reset" class="btn btn-secondary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                <path d="M3 3v5h5"></path>
+              </svg>
+              <span>Reset Hitungan</span>
+            </button>
+          </div>
+          <div id="copy-status" class="copy-status" aria-live="polite"></div>
+        </div>
+
+        <!-- Panduan Singkat -->
+        <div class="tips-box">
+          <span class="tips-title">Pedoman Pengelolaan:</span>
+          <div class="tips-grid">
+            <div class="tip-col">
+              <strong class="tip-col-title">1. Tabung di Awal</strong>
+              <p class="tip-col-text">Segera sisihkan pos tabungan dan darurat saat menerima gaji, jangan menunggu sisa uang di akhir bulan.</p>
+            </div>
+            <div class="tip-col">
+              <strong class="tip-col-title">2. Kebutuhan Membengkak?</strong>
+              <p class="tip-col-text">Jika biaya sewa dan kebutuhan pokok di kota besar tinggi, pangkas pos keinginan terlebih dahulu.</p>
+            </div>
+            <div class="tip-col">
+              <strong class="tip-col-title">3. Target Darurat Terpenuhi</strong>
+              <p class="tip-col-text">Setelah dana darurat mencapai 3 hingga 6 bulan kebutuhan hidup, alihkan porsi 10% ini untuk memperbesar investasi.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <div class="footer-content">
+        <p class="footer-text">Kalkulator Finansial Fleksibel. Bekerja sepenuhnya secara statis di peramban tanpa transmisi data pribadi ke server.</p>
+      </div>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
